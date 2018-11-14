@@ -1,25 +1,28 @@
 //@flow
 import React, { PureComponent, Fragment } from "react";
 import Modal from '../Modal';
-
+const { dialog } = window.require('electron').remote
 type Props = {
     onClose: () => void
 
 };
 type State = {
     show: boolean;
+    path: string
 };
 
 class App extends PureComponent<Props, State> {
 
     state = {
-        show: false
+        show: false,
+        path: ""
     }
     showModal = () => {
 
         this.setState({
             ...this.state,
-            show: !this.state.show
+            show: !this.state.show,
+            path: ""
         });
 
     }
@@ -27,6 +30,20 @@ class App extends PureComponent<Props, State> {
     onSubmit = (e: any) => {
         e.preventDefault();
         alert("submit")
+    }
+
+    selectProject = (e: any) => {
+        e.preventDefault();
+        var that = this;
+        dialog.showOpenDialog({ properties: ['openDirectory'] }, function (paths) {
+            const [path] = paths;
+
+            that.setState({
+                ...that.state,
+                path: path
+            });
+            console.log(that.state)
+        })
     }
 
     componentDidMount() {
@@ -44,8 +61,8 @@ class App extends PureComponent<Props, State> {
                     <form>
 
                         <div className="form-group">
-                            <label htmlFor="upldpjct">Upload Project:</label>
-                            <button className="btn btn-secondary">Choose Project</button>
+                            <button className="btn btn-secondary" onClick={e => this.selectProject(e)}>Choose Project</button>
+                            {this.state.path}
                         </div>
                         <div className="form-group">
                             <label htmlFor="port">Port:</label>

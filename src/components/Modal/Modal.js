@@ -20,8 +20,8 @@ const modalStyle = {
 };
 
 const footerStyle = {
-    position: "absolute",
-    bottom: 20
+    position: "relative",
+    float: "right"
 };
 
 export default class Modal extends Component {
