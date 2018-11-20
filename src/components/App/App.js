@@ -1,7 +1,9 @@
 //@flow
 import React, { PureComponent, Fragment } from "react";
 import Modal from '../Modal';
-const { dialog } = window.require('electron').remote
+import { loadPackageJson } from '../../services/file-read-service'
+
+const { dialog } = window.require('electron').remote;
 type Props = {
     onClose: () => void
 
@@ -29,7 +31,11 @@ class App extends PureComponent<Props, State> {
 
     onSubmit = (e: any) => {
         e.preventDefault();
-        alert("submit")
+        loadPackageJson(this.state.path).then((packageInfo) => {
+            console.log(packageInfo)
+        }).catch((err) => {
+            console.log("error", err)
+        })
     }
 
     selectProject = (e: any) => {
