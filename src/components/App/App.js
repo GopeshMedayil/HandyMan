@@ -1,7 +1,7 @@
 //@flow
 import React, { PureComponent, Fragment } from "react";
 import Modal from '../Modal';
-import { loadPackageJson } from '../../services/file-read-service'
+import { loadPackageJson } from '../../services/file-read-service';
 
 const { dialog } = window.require('electron').remote;
 type Props = {
@@ -10,14 +10,16 @@ type Props = {
 };
 type State = {
     show: boolean;
-    path: string
+    path: string,
+    projects: Array
 };
 
 class App extends PureComponent<Props, State> {
 
     state = {
         show: false,
-        path: ""
+        path: "",
+        projects: []
     }
     showModal = () => {
 
@@ -32,7 +34,19 @@ class App extends PureComponent<Props, State> {
     onSubmit = (e: any) => {
         e.preventDefault();
         loadPackageJson(this.state.path).then((packageInfo) => {
-            console.log(packageInfo)
+            const projectInfo = {
+                name: packageInfo.name,
+                path: this.state.path
+            }
+
+            this.setState({
+                ...this.state,
+                show: !this.state.show,
+                projects: [...this.state.projects, projectInfo]
+            });
+            console.log(this.state);
+
+
         }).catch((err) => {
             console.log("error", err)
         })
